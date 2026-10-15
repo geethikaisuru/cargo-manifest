@@ -46,11 +46,20 @@ jobs:
         run: npm ci
       # From the root: the CDK resolves the project to `infra/` itself. State
       # is still written next to the resources, so the commit path is unchanged.
+      # Executions in outputs/ are held, never run, from here: this deploy has
+      # no preview to hold them to, and one can send emails a revert cannot
+      # take back. An empty approvals list holds every pending one; they run
+      # from Cargo's own deploy once the repository is connected to the
+      # workspace, which previews each on its pull request and starts only
+      # what was approved. See outputs/README.md.
       - name: cargo-ai cdk deploy
         if: steps.guard.outputs.enabled == 'true'
-        run: npx cargo-ai cdk deploy --yes
+        run: |
+          echo '[]' > "$RUNNER_TEMP/approved-executions.json"
+          npx cargo-ai cdk deploy --yes
         env:
           CARGO_API_KEY: ${{ secrets.CARGO_API_KEY }}
+          CARGO_APPROVED_EXECUTIONS: ${{ runner.temp }}/approved-executions.json
       - name: commit state back
         if: steps.guard.outputs.enabled == 'true'
         run: |

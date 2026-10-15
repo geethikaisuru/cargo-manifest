@@ -69,7 +69,10 @@ that writes copy without reading `context/` will sound like a generic bot.
   with a `README.md` carrying an **`outcome:`** field (meetings, replies,
   pipeline attributed, or "none" with a reason). That field is what lets motions
   be ranked by results instead of opinions. Read recent entries for memory
-  before starting related work. Never rewrite an existing entry.
+  before starting related work. Never rewrite an existing entry. An entry can
+  also declare a one-off run (`defineBatch` / `defineRun`) that the merge runs
+  exactly once: it carries `outcome: pending` until the run finishes, and the
+  outcome is filled in once. Use the `new-execution` skill.
 
 ## Workflow
 
@@ -107,6 +110,9 @@ that writes copy without reading `context/` will sound like a generic bot.
   the sentence.
 - When a task produces a real-world result (a list built, a campaign shipped, a
   research brief), archive it under `outputs/` before finishing.
+- Something to run once (enroll a list, backfill a field) is an execution in
+  `outputs/`, not a script and not a local run: use the `new-execution` skill,
+  so it is previewed on the PR and runs exactly once on merge.
 - Personal vs shared: experiments and personal mess go in `scratch/`
   (gitignored), personal skills in `~/.claude/skills/`, personal instructions
   in `CLAUDE.local.md`. Work enters the shared layers only through a PR, once

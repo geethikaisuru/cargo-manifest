@@ -8,6 +8,11 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["scripts/**/*.ts", "infra/**/*.ts", ".cargo-ai/**/*.d.ts"],
+  "include": [
+    "scripts/**/*.ts",
+    "infra/**/*.ts",
+    "outputs/**/*.ts",
+    ".cargo-ai/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "infra/apps/*/**", "infra/workers/*/**"]
 }

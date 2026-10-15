@@ -2,7 +2,9 @@ name: cargo plan
 
 on:
   pull_request:
-    paths: ["infra/**"]
+    # An execution in outputs/ (its .ts, and the CSV a batch reads) changes
+    # what the next deploy does, so it is planned like infra/.
+    paths: ["infra/**", "outputs/**/*.ts", "outputs/**/*.csv"]
 
 concurrency:
   group: cargo-plan-${{ github.ref }}
