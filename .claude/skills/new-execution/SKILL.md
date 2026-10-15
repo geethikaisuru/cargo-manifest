@@ -45,7 +45,7 @@ it merges.
    | `{ kind: "segment", segment }` | A list someone built in Cargo |
    | `{ kind: "filter", model, filter, limit }` | Records matching a condition. `limit` is required |
    | `{ kind: "recordIds", model, ids }` | A handful of known records |
-   | `{ kind: "records", records }` | A few rows written in the code |
+   | `{ kind: "form", records }` | A few rows written in the code, checked against the workflow's form |
    | `{ kind: "file", path, mappings }` | A CSV in the entry, at most 50 MB. `path` is relative to `infra/` (`"../outputs/<id>/accounts.csv"`), and `mappings` renames its columns to the workflow's inputs |
 
 4. **Write `outputs/<id>/<slug>.ts`.**
