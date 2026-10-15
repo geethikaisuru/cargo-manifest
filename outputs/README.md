@@ -33,6 +33,8 @@ outputs/2026-10-14-expansion-pilot/
 └── README.md            outcome: pending, until the run finishes
 ```
 
+- `cargo.json` names `outputs/` as where executions live, so every `.ts`
+  file here is loaded by the CDK. Keep only executions in them.
 - The `.ts` file declares one `defineBatch` (a play, tool, or workflow run once
   per record) or `defineRun` (a tool or workflow run once). Its id is the
   directory name. It imports what it runs from `infra/` by handle.
