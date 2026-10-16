@@ -12,4 +12,3 @@ the environment (see `.env.example`).
 | --- | --- |
 | `list-memories.ts` | List an agent's runtime memories (the example wrapper) |
 | `ci/lint-context.ts` | Context layer linter (also runs in CI) |
-| `ci/comment-plan.ts` | Post a `cdk plan` diff as a sticky PR comment |
