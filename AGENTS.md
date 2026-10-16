@@ -79,8 +79,9 @@ that writes copy without reading `context/` will sound like a generic bot.
 1. Change `context/` or `infra/` on a branch. Before opening the PR, run
    `npm run lint` if you touched any prose, and `npm run typecheck` if you
    touched `infra/` or `scripts/`. Both also run in CI.
-2. CI runs `cargo-ai cdk plan` and posts the diff as a comment. Review it the
-   way you would review a terraform plan.
+2. Cargo plans the pull request and posts the diff as a comment and a check,
+   once the repository is connected to the workspace (Settings > States).
+   Review it the way you would review a terraform plan.
 3. Merging to main deploys. Never run `cargo-ai cdk deploy` locally against
    production. Local deploy is denied by convention and hard-blocked per agent:
    Claude Code (`.claude/settings.json`), Cursor

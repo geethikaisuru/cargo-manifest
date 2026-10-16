@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Cursor beforeShellExecution guard.
 
-Hard-blocks local `cargo-ai cdk deploy` / `cdk destroy`. Deploys happen from CI
-on merge to main only. This is the Cursor equivalent of the deny list Claude
+Hard-blocks local `cargo-ai cdk deploy` / `cdk destroy`. Deploys happen from
+Cargo on merge to main only. This is the Cursor equivalent of the deny list Claude
 Code enforces in .claude/settings.json.
 
 Reads the hook JSON on stdin, writes a permission decision as JSON on stdout.
@@ -15,11 +15,11 @@ BLOCK = re.compile(r"cargo-ai\s+cdk\s+(deploy|destroy)\b")
 
 REASON_USER = (
     "Blocked: local `cargo-ai cdk deploy` / `cdk destroy` is not allowed. "
-    "Deploys run from CI on merge to main. Open a PR instead."
+    "Cargo deploys on merge to main. Open a PR instead."
 )
 REASON_AGENT = (
     "Repo policy (AGENTS.md): never run cargo-ai cdk deploy/destroy locally. "
-    "Open a PR; CI runs the plan and deploys on merge to main."
+    "Open a PR; Cargo plans it and deploys on merge to main."
 )
 
 

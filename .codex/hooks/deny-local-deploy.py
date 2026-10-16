@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Codex PreToolUse guard.
 
-Hard-blocks local `cargo-ai cdk deploy` / `cdk destroy`. Deploys happen from CI
-on merge to main only. This mirrors the Claude Code deny list
+Hard-blocks local `cargo-ai cdk deploy` / `cdk destroy`. Deploys happen from
+Cargo on merge to main only. This mirrors the Claude Code deny list
 (.claude/settings.json) and the Cursor beforeShellExecution guard.
 
 The PreToolUse matcher only filters by tool name (Bash), so this hook runs for
@@ -36,7 +36,7 @@ def main():
                 "permissionDecision": "deny",
                 "permissionDecisionReason": (
                     "Repo policy (AGENTS.md): never run cargo-ai cdk deploy/destroy "
-                    "locally. Deploys happen from CI on merge to main. Open a PR instead."
+                    "locally. Cargo deploys on merge to main. Open a PR instead."
                 ),
             }
         }))

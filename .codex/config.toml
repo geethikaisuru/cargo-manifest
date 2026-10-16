@@ -11,7 +11,7 @@
 # before anything that reaches outside it. This is the Codex equivalent of the
 # "no local deploy" guardrail: `cargo-ai cdk deploy` needs network, so it
 # surfaces an approval prompt rather than running silently. Deploys still only
-# happen from CI on merge to main.
+# happen from Cargo on merge to main.
 sandbox_mode = "workspace-write"
 approval_policy = "on-request"
 

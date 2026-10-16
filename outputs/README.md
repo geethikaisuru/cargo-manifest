@@ -49,7 +49,6 @@ outputs/2026-10-14-expansion-pilot/
 - A filter batch needs a `limit`, and a file at most 50 MB.
 
 Executions run only from Cargo's own deploy, once the repository is connected
-to the workspace: it is the deploy that previews each one on its pull request
-and starts only what was approved. The GitHub Actions deploy in
-`.github/workflows/` holds them, and a held execution stays pending until a
-connected deploy runs it.
+to the workspace (Settings > States): it is the deploy that previews each one
+on its pull request and starts only what was approved. A held execution stays
+pending until a later pull request previews it again.

@@ -51,7 +51,7 @@ npm install      # also runs `npm run types` (skips if you are not signed in)
 npm run types    # regenerate per-workspace types into .cargo-ai/
 npm run info     # what the project declares, offline
 npm run plan     # read-only diff: code vs live workspace
-npm run deploy   # CI only; local deploy is denied by convention
+npm run deploy   # Cargo deploys on merge; local deploy is denied by convention
 ```
 
 ## Rules
@@ -60,7 +60,10 @@ npm run deploy   # CI only; local deploy is denied by convention
   UUIDs. Commit it. Never edit it by hand.
 - Secrets come from the environment via `secret()`; non-secret config via
   `env()`. Values never land in code, state, or git.
-- Deploys run from CI on merge to main (`.github/workflows/cargo-deploy.yml`).
+- Cargo plans every pull request and deploys on merge to main, once the
+  repository is connected to the workspace (Settings > States). Bind the
+  checkout with `cargo-ai project state bind <state-uuid>` and commit the
+  `cargo.state.json` it writes, so the deploy knows which state it owns.
 - Reference resources by imported handle, never by pasted UUID. Use the
   `*Ref("uuid")` helpers only for resources that live outside this repo.
 - Workflow bodies (`defineWorkflow`) are parsed and compiled to a node DAG,

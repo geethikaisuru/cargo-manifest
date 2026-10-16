@@ -89,6 +89,6 @@ it merges.
   the merge changes nothing: the ledger keyed on the id has it. To run
   something again, or differently, write a new entry with a new id.
 - **Executions run only from Cargo's deploy**, once the repository is
-  connected to the workspace. The GitHub Actions deploy holds them, and local
-  deploys are denied here as for everything else.
+  connected to the workspace. Local deploys are denied here, as for
+  everything else.
 - **Absolute dates**, and no em dashes, as everywhere in this repo.
