@@ -11,10 +11,16 @@
  *     attributed: what this run actually produced)
  *   - a directory name that is not outputs/YYYY-MM-DD-<slug>/ (absolute dates
  *     everywhere)
+ *   - an execution (`defineBatch` / `defineRun`) whose id is not the entry's
+ *     directory name, or a second one in the same entry
+ *   - `outcome: pending` on an entry that declares no execution: only an
+ *     execution waiting for its merge has an outcome still to come
+ *   - an execution declared in a `_`-prefixed directory: the CDK finds
+ *     executions anywhere in the repository, so one in `_template/` would run
  *
  * Skipped:
  *   - `_`-prefixed directories (`_template/`), which are scaffolding rather
- *     than entries
+ *     than entries, apart from the execution check above
  *
  * Usage: tsx scripts/ci/lint-outputs.ts [outputsDir]
  */
@@ -24,6 +30,9 @@ import { parse as parseYaml } from "yaml";
 
 const OUTPUTS_DIR = resolve(process.argv[2] ?? "outputs");
 const ENTRY_PATTERN = /^\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]*$/;
+// The id an execution is declared under. A text match is enough for a lint:
+// the CDK, which decides what runs, reads the file's imports instead.
+const EXECUTION_ID = /\bdefine(?:Batch|Run)\s*\(\s*["'`]([^"'`]+)["'`]/g;
 
 const errors: string[] = [];
 
@@ -36,9 +45,18 @@ if (!existsSync(OUTPUTS_DIR)) {
 // shape a new entry is copied from, and it has no date, no outcome and nothing
 // to report. Same convention as cadence/ and initiatives/, which use
 // `_template.md`.
-const entries = readdirSync(OUTPUTS_DIR, { withFileTypes: true }).filter(
-  (entry) => entry.isDirectory() && !entry.name.startsWith("_"),
+const directories = readdirSync(OUTPUTS_DIR, { withFileTypes: true }).filter(
+  (entry) => entry.isDirectory(),
 );
+const entries = directories.filter((entry) => !entry.name.startsWith("_"));
+
+for (const scaffold of directories.filter((entry) => entry.name.startsWith("_"))) {
+  if (executionIds(join(OUTPUTS_DIR, scaffold.name)).length > 0) {
+    errors.push(
+      `${scaffold.name}: declares an execution, which the CDK would run. Keep execution examples in prose, not in a .ts file`,
+    );
+  }
+}
 
 for (const entry of entries) {
   if (!ENTRY_PATTERN.test(entry.name)) {
@@ -46,6 +64,18 @@ for (const entry of entries) {
       `${entry.name}: entry directories are named outputs/YYYY-MM-DD-<slug>/ (absolute dates, kebab-case slug)`,
     );
     continue;
+  }
+
+  const ids = executionIds(join(OUTPUTS_DIR, entry.name));
+  if (ids.length > 1) {
+    errors.push(
+      `${entry.name}: declares ${ids.length} executions (${ids.join(", ")}). One entry, one execution`,
+    );
+  }
+  for (const id of ids.filter((id) => id !== entry.name)) {
+    errors.push(
+      `${entry.name}: declares execution "${id}". Its id is the directory name, so the entry and the ledger name the same thing`,
+    );
   }
 
   const readme = join(OUTPUTS_DIR, entry.name, "README.md");
@@ -88,6 +118,12 @@ for (const entry of entries) {
       );
     }
   }
+
+  if (String(frontmatter.outcome ?? "").trim() === "pending" && ids.length === 0) {
+    errors.push(
+      `${entry.name}/README.md: outcome "pending" is only for an entry whose execution runs on merge. Write what this produced`,
+    );
+  }
 }
 
 for (const e of errors) console.error(`error ${e}`);
@@ -95,3 +131,14 @@ console.log(
   `\noutputs lint: ${entries.length} entries, ${errors.length} errors`,
 );
 process.exit(errors.length > 0 ? 1 : 0);
+
+/** The ids of the executions declared by the `.ts` files directly in `dir`. */
+function executionIds(dir: string): string[] {
+  return readdirSync(dir)
+    .filter((file) => file.endsWith(".ts") && !file.endsWith(".d.ts"))
+    .flatMap((file) =>
+      [...readFileSync(join(dir, file), "utf8").matchAll(EXECUTION_ID)].map(
+        (match) => match[1],
+      ),
+    );
+}

@@ -5,6 +5,7 @@ on:
     paths:
       - "scripts/**"
       - "infra/**"
+      - "outputs/**/*.ts"
       - "tsconfig.json"
       - "package.json"
       - "package-lock.json"
@@ -13,7 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  # One install, one job: `npm run typecheck` compiles `scripts/` and `infra/`
+  # One install, one job: `npm run typecheck` compiles `scripts/`, `infra/` and
+  # the executions in `outputs/`
   # against the root tsconfig. Generated types (`cargo-ai cdk types`) sharpen
   # extractor/connector config checking, but they are optional (configs fall
   # back to loose records without them), so the key only decides whether we

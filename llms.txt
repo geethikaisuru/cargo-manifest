@@ -21,6 +21,7 @@ Manifest structures a GTM organization as a codebase. Knowledge lives in markdow
 - Outreach motions declare a hypothesis (segment, angle, trigger, expected reply rate) before any copy exists. Enrichment, scoring, routing, and signal motions are not campaigns and are exempt.
 - A claim enters context after it shows up twice, independently. Once is an anecdote.
 - Outputs entries carry an `outcome:` field, so motions are ranked by results rather than opinions.
+- One-off runs (enroll a list into a play, backfill a field) are declared as code in an outputs entry, previewed on the pull request, and run exactly once by the merge.
 - Absolute dates everywhere. Outputs are append-only. Major context rewrites archive the prior version.
 
 ## Cargo

@@ -9,7 +9,7 @@
 - [ ] .claude/skills/
 - [ ] evals/ (required if a system prompt changed)
 - [ ] scripts/
-- [ ] outputs/
+- [ ] outputs/ (an execution: checked its "Runs once" row in the plan comment)
 
 ## Observed vs concluded
 

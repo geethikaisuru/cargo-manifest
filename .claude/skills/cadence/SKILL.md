@@ -82,7 +82,11 @@ memory.
 learning from the first to the second, so the repo gets smarter every week.
 
 1. **Collect.** List `outputs/` entries from the last 7 days (directory names
-   start with the date). Read each entry's summary.
+   start with the date). Read each entry's summary. Then find every entry,
+   whatever its date, still at `outcome: pending`: an execution that merged
+   and has finished gets its outcome filled from its batch or run (the
+   `new-execution` skill, step 7). One still pending after its merge was held;
+   list it under open questions with the reason.
 
 2. **Summarize.** Write `outputs/YYYY-MM-DD-weekly-review/README.md` with:
    - What ran (plays, campaigns, research) and headline numbers.
