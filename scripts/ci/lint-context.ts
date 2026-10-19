@@ -2,10 +2,8 @@
  * Context layer linter.
  *
  * Errors (exit 1):
- *   - missing or empty `title` / `description` frontmatter
- *   - unparseable frontmatter
- *   - `references:` entries that don't resolve to a context file
- *   - [[wikilinks]] or relative .md links that don't resolve
+ *   - no frontmatter block, or missing or empty `title` / `description`
+ *   - `references:` that is not a list, or an entry carrying `.md`
  *   - a [[wikilink]] in plan/, cadence/, initiatives/ or outputs/ that names
  *     no context file (templates are exempt: their placeholders are
  *     illustrative)
@@ -18,6 +16,12 @@
  * Warnings (exit 0):
  *   - orphan files (nothing references them)
  *   - stale files (no git commit touching them in STALE_DAYS)
+ *
+ * Inside context/, frontmatter that does not parse and links that resolve to
+ * no file are Cargo's to report, not this file's: the Cargo plan check fails
+ * the PR on both (`@cargo-ai/cdk` >= 1.0.114). Links are still read here,
+ * because the orphan warning and the outreach citation rule need to know what
+ * each file cites.
  *
  * Usage: tsx scripts/ci/lint-context.ts [contextDir]
  */
@@ -100,15 +104,15 @@ function parseDoc(path: string): Doc {
     doc.frontmatterError = "no frontmatter block";
     return doc;
   }
+  // A block that does not parse leaves `frontmatter` null: the Cargo plan
+  // reports it, and the checks below have nothing to read.
   try {
     const parsed = parseYaml(match[1]);
-    if (parsed === null || typeof parsed !== "object") {
-      doc.frontmatterError = "frontmatter is not a mapping";
-    } else {
+    if (parsed !== null && typeof parsed === "object") {
       doc.frontmatter = parsed as Record<string, unknown>;
     }
-  } catch (e) {
-    doc.frontmatterError = `frontmatter parse error: ${(e as Error).message}`;
+  } catch {
+    // Reported by the Cargo plan.
   }
   doc.body = raw.slice(match[0].length);
   return doc;
@@ -161,9 +165,7 @@ for (const doc of docs) {
           if (typeof ref !== "string") continue;
           if (ref.endsWith(".md")) {
             errors.push(`${doc.rel}: reference "${ref}" must omit the .md extension`);
-          } else if (!refExists(ref)) {
-            errors.push(`${doc.rel}: broken reference "${ref}"`);
-          } else {
+          } else if (refExists(ref)) {
             referenced.add(ref);
             doc.cites.add(ref);
           }
@@ -175,9 +177,7 @@ for (const doc of docs) {
   // [[wikilinks]] resolve against the context root.
   for (const m of doc.body.matchAll(/\[\[([^\]|#]+)(?:[|#][^\]]*)?\]\]/g)) {
     const target = m[1].trim();
-    if (!refExists(target)) {
-      errors.push(`${doc.rel}: broken wikilink [[${target}]]`);
-    } else {
+    if (refExists(target)) {
       referenced.add(target);
       doc.cites.add(target);
     }
@@ -188,9 +188,7 @@ for (const doc of docs) {
     const target = m[1];
     if (/^(https?:)?\/\//.test(target)) continue;
     const abs = resolve(dirname(doc.path), target);
-    if (!existsSync(abs)) {
-      errors.push(`${doc.rel}: broken link (${target})`);
-    } else if (abs.startsWith(CONTEXT_DIR)) {
+    if (existsSync(abs) && abs.startsWith(CONTEXT_DIR)) {
       const slug = relative(CONTEXT_DIR, abs).replace(/\.mdx?$/, "");
       referenced.add(slug);
       doc.cites.add(slug);
