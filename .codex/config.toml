@@ -25,10 +25,10 @@ network_access = true
 experimental_use_rmcp_client = true
 
 # Same Cargo MCP server that .mcp.json (Claude Code) and .cursor/mcp.json
-# (Cursor) point at. Export CARGO_API_KEY in your shell before launching Codex.
+# (Cursor) point at. Export CARGO_API_TOKEN in your shell before launching Codex.
 [mcp_servers.cargo]
 url = "https://mcp.getcargo.io"
-bearer_token_env_var = "CARGO_API_KEY"
+bearer_token_env_var = "CARGO_API_TOKEN"
 
 # Deterministic guard: hard-block local `cargo-ai cdk deploy` / `cdk destroy`.
 # This is the Codex counterpart to the Claude Code deny list and the Cursor

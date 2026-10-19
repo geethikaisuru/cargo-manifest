@@ -2,7 +2,7 @@
   "mcpServers": {
     "cargo": {
       "url": "https://mcp.getcargo.io",
-      "headers": { "Authorization": "Bearer ${CARGO_API_KEY}" }
+      "headers": { "Authorization": "Bearer ${CARGO_API_TOKEN}" }
     }
   }
 }

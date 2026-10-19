@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH: automation/cargo-deps
-      CARGO_API_KEY: ${{ secrets.CARGO_API_KEY }}
+      CARGO_API_TOKEN: ${{ secrets.CARGO_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,9 +45,9 @@ jobs:
           fi
 
       # Same shape as typecheck.yml: generated workspace types sharpen the
-      # check but are optional, so a repo with no CARGO_API_KEY still validates.
+      # check but are optional, so a repo with no CARGO_API_TOKEN still validates.
       - name: generate workspace types
-        if: steps.diff.outputs.changed == 'true' && env.CARGO_API_KEY != ''
+        if: steps.diff.outputs.changed == 'true' && env.CARGO_API_TOKEN != ''
         run: npm run types
 
       - name: typecheck
