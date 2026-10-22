@@ -1,10 +1,10 @@
 {
   "extraKnownMarketplaces": {
-    "cargo": {
+    "cargo-skills": {
       "source": { "source": "github", "repo": "getcargohq/cargo-skills" }
     }
   },
-  "enabledPlugins": { "cargo@cargo": true },
+  "enabledPlugins": { "cargo@cargo-skills": true },
   "permissions": {
     "allow": [
       "Bash(cargo-ai cdk plan*)",
