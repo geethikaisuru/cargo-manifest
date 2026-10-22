@@ -16,7 +16,7 @@ try {
   console.log(out);
 } catch (e) {
   console.error(
-    "cargo-ai failed. Is the CLI installed and CARGO_API_KEY set? Run `cargo-ai ai memory list --help` for options.",
+    "cargo-ai failed. Is the CLI installed and CARGO_API_TOKEN set? Run `cargo-ai ai memory list --help` for options.",
   );
   console.error((e as Error).message);
   process.exit(1);
