@@ -21,13 +21,19 @@ const SKIP = new Set([
   "scripts/ci/check-copy.ts",
 ]);
 
+// The Cargo skill bundle the CLI installs at scaffold time is vendored, not
+// written here: it follows its own upstream style, and without this every new
+// project's first pull request fails on thousands of em dashes it never wrote.
+const VENDORED = ["agent/skills/", ".agents/skills/"];
+
 const BINARY_EXT = /\.(png|jpe?g|gif|webp|ico|pdf|zip|gz|woff2?|ttf|eot)$/i;
 
 const tracked = execFileSync("git", ["ls-files"], { encoding: "utf8" })
   .split("\n")
   .map((f) => f.trim())
   .filter(Boolean)
-  .filter((f) => !SKIP.has(f) && !BINARY_EXT.test(f));
+  .filter((f) => !SKIP.has(f) && !BINARY_EXT.test(f))
+  .filter((f) => !VENDORED.some((dir) => f.startsWith(dir)));
 
 const offenders: string[] = [];
 
