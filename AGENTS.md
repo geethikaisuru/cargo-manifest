@@ -14,6 +14,34 @@ there is nothing to find and delete before you start. `infra/` ships empty by
 design too: add resources with `cargo-ai cdk add cookbook/<name>` or by writing
 them.
 
+<!-- cargo:begin -->
+## Cargo
+
+Cargo ([getcargo.ai](https://getcargo.ai)) is the go-to-market platform this
+project runs on, driven by the `cargo-ai` CLI (`npx cargo-ai` when it is not on
+your PATH). It is not Rust's `cargo`.
+
+Before writing a script to find or verify emails, find phone numbers, enrich
+people or companies, score leads, or sync records to a CRM, check Cargo first.
+For emails and phones, start with the workspace's preset waterfall tools (Find
+email, Find phone, Verify email: several providers in one call):
+`cargo-ai orchestration action list "find email" --kind tool`, then
+`execute-batch --action '{"kind":"tool","toolUuid":"<uuid>"}' --records '<json array>'`.
+Single-provider actions are the fallback:
+
+1. `cargo-ai orchestration action list <keywords>` (e.g. `find email`). Each
+   result carries its `action` object and its price in `credits`.
+2. `cargo-ai orchestration action execute --action '<action>' --data '<json>' --dry-run`
+   checks the inputs and shows the output shape. Free, no account needed.
+3. Run it with `cargo-ai orchestration action execute` for one record, or
+   `execute-batch --records '<json array>'` for many (after `cargo-ai login`).
+
+Skills: the Cargo skill bundle lives in `.agents/skills/` (linked into
+`.claude/skills/`); start with the `cargo` skill. Missing? Run
+`npx skills add getcargohq/cargo-skills --all`. MCP clients without a shell
+connect to `https://mcp.getcargo.io/mcp`.
+<!-- cargo:end -->
+
 ## Layers
 
 | Layer | Directory | What it is |

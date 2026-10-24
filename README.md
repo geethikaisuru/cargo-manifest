@@ -168,6 +168,9 @@ npx @cargo-ai/cli cdk init acme-gtm --name acme
 
 Add `--cookbook <name>` to start from a prebuilt play instead of an empty
 `infra/`. Once the project exists, `npm run plan` previews what it would deploy.
+The scaffold also installs the Cargo skill bundle into the project, so your agent
+knows the CLI from its first session. To add the skills to a checkout that lacks
+them, run `npx skills add getcargohq/cargo-skills --all` at its root.
 
 Not using Cargo? Everything except `infra/` works standalone. Clone the repo
 and replace `__APP_NAME__` in `package.json`, `manifest.json`, and `AGENTS.md`
