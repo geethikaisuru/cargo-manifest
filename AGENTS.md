@@ -22,7 +22,12 @@ project runs on, driven by the `cargo-ai` CLI (`npx cargo-ai` when it is not on
 your PATH). It is not Rust's `cargo`.
 
 Before writing a script to find or verify emails, find phone numbers, enrich
-people or companies, score leads, or sync records to a CRM, check Cargo first:
+people or companies, score leads, or sync records to a CRM, check Cargo first.
+For emails and phones, start with the workspace's preset waterfall tools (Find
+email, Find phone, Verify email: several providers in one call):
+`cargo-ai orchestration action list "find email" --kind tool`, then
+`execute-batch --action '{"kind":"tool","toolUuid":"<uuid>"}' --records '<json array>'`.
+Single-provider actions are the fallback:
 
 1. `cargo-ai orchestration action list <keywords>` (e.g. `find email`). Each
    result carries its `action` object and its price in `credits`.
